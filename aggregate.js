@@ -57,21 +57,21 @@ const aggregated = {};
         longitude: minLng + parseFloat(x) * stepLng,
         population: 0,
         index: dataCount++,
-        count: 0
+        area: 0
       };
     }
-    aggregated[x][y].population += item.population * 1000000 / 900; // Convert from 30mx30m to 1kmx1km average
-    aggregated[x][y].count++;
+    aggregated[x][y].population += item.population;
+    aggregated[x][y].area += 900; // 30x30m grid tiles https://dataforgood.fb.com/docs/methodology-high-resolution-population-density-maps-demographic-estimates/
   });
 
   const data = new Array(dataCount);
   for (const x in aggregated) {
     for (const y in aggregated[x]) {
-      const {index, latitude, longitude, population, count} = aggregated[x][y];
+      const {index, latitude, longitude, population, area} = aggregated[x][y];
       data[index] = {
         latitude,
         longitude,
-        population: population / count
+        population: (population / area) * 1000000 // Convert to persons / km^2
       }
     }
   }

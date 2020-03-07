@@ -47,7 +47,7 @@ class App extends React.Component {
         getElevation: item => item.population,
         elevationScale: 3,
         radius: 500,
-        opacity: 0.1,
+        opacity: 0.005,
         onHover: info => this.setState({object: info.object, mouseX: info.x, mouseY: info.y})
       })
     ];
@@ -73,7 +73,7 @@ class App extends React.Component {
         backgroundColor: "white",
         padding: 5,
         borderRadius: 5
-      }
+      };
       const {latitude, longitude, population} = this.state.object;
       tooltip = <div style={style}>
                   <div>
@@ -87,12 +87,39 @@ class App extends React.Component {
     return (
       <div>
         { tooltip }
+        <Info />
         <DeckGL controller={true} initialViewState={initialViewState} layers={this.state.layers}>
           <StaticMap mapboxAccessToken={process.env.MapboxAccessToken}/>
         </DeckGL>
       </div>
     );
   }
+}
+
+function Info() {
+  const style = {
+    position: "absolute",
+    zIndex: 999,
+    top: 20,
+    left: 20,
+    width: "30%",
+    fontSize: 20,
+    backgroundColor: "white",
+    padding: 5,
+    borderRadius: 5
+  };
+
+  return (
+    <div style={style}>
+      <div>
+        Population density map of Egypt using <a href="https://deck.gl">deck.gl</a>. Data re-aggregated to 
+        a 1000x1000 grid. Mouse over a column for details.
+      </div>
+      <div>
+        <a href="https://data.humdata.org/dataset/highresolutionpopulationdensitymaps-egy">Data Source</a>
+      </div>
+    </div>
+  );
 }
 
 ReactDOM.render(
